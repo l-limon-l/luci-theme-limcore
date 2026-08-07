@@ -2643,7 +2643,8 @@
     }
 
     .table,
-    table {
+    table,
+    .cbi-section-table {
       @apply table mb-4 w-full border-separate border-spacing-0 overflow-visible border-0 bg-transparent max-md:mx-0 max-md:block max-md:w-full max-md:overflow-visible max-md:shadow-none;
 
       &[width="100%"] {
@@ -2678,13 +2679,15 @@
       }
 
       & tr,
-      & .tr {
+      & .tr,
+      & .cbi-section-table-row {
         @apply table-row max-md:border-border bg-transparent transition-[background-color] duration-200 ease-out max-md:flex max-md:flex-wrap max-md:border-b max-md:px-0 max-md:py-2;
         @apply has-[.cbi-progressbar]:max-md:flex has-[.cbi-progressbar]:max-md:items-center has-[.cbi-progressbar]:max-md:justify-center;
 
         &:last-child {
           @apply max-md:rounded-b-md;
-          .td {
+          .td,
+          .cbi-section-table-cell {
             @apply border-b-0;
           }
         }
@@ -2756,7 +2759,10 @@
       }
 
       & th,
-      & .th {
+      & .th,
+      & .cbi-section-table-titles > div,
+      & .cbi-section-table-titles > td,
+      & .cbi-section-table-titles > th {
         @apply border-border/50 border-b bg-transparent px-3 py-2 text-left text-base font-semibold max-md:flex-[1_1_50%] max-md:border-0 max-md:text-sm;
 
         #cbi-samba4 & {
@@ -2793,7 +2799,8 @@
       }
 
       & td,
-      & .td {
+      & .td,
+      & .cbi-section-table-cell {
         @apply text-muted-foreground border-border/30 table-cell border-b px-3 py-2 align-middle text-base break-words whitespace-normal max-md:flex-[1_1_50%] max-md:border-0 max-md:px-1 max-md:py-1 max-md:text-sm;
         @apply before:hidden before:content-[attr(data-title)] before:max-md:mb-1 before:max-md:block before:max-md:text-xs before:max-md:font-semibold before:max-md:tracking-wider;
 
