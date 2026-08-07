@@ -11,6 +11,7 @@ return baseclass.extend({
     this.initVercelTabs();
     this.initTabContentAnimation();
     this.initCustomSelects();
+    this.initCbiDropdownFix();
     this.initDescriptionPlacement();
     this.initTableOfContents();
     this.initToastAutoDismiss();
@@ -578,7 +579,7 @@ return baseclass.extend({
   closeAllDropdowns(except) {
     // Close all outline-selects
     document.querySelectorAll(".outline-select.open").forEach((s) => {
-      if (s !== except) s.classList.remove("open");
+      if (s !== except) s.dispatchEvent(new CustomEvent("outline-select-close"));
     });
     // Close all cbi-dropdowns
     document.querySelectorAll(".cbi-dropdown[open]").forEach((d) => {
@@ -613,6 +614,9 @@ return baseclass.extend({
 
       const panel = document.createElement("div");
       panel.className = "outline-select-panel";
+      if (HTMLElement.prototype.hasOwnProperty("popover")) {
+        panel.setAttribute("popover", "manual");
+      }
 
       const buildOptions = () => {
         panel.innerHTML = "";
@@ -654,7 +658,26 @@ return baseclass.extend({
         wrap.classList.add("open");
         const rect = wrap.getBoundingClientRect();
         const below = window.innerHeight - rect.bottom;
-        panel.classList.toggle("above", below < 200 && rect.top > 200);
+        
+        if (panel.hasAttribute("popover")) {
+          panel.style.setProperty('position', 'fixed', 'important');
+          panel.style.setProperty('margin', '0', 'important');
+          panel.style.minWidth = `${rect.width}px`;
+          panel.style.left = `${rect.left}px`;
+          if (below < 200 && rect.top > 200) {
+            panel.classList.add("above");
+            panel.style.top = 'auto';
+            panel.style.bottom = `${window.innerHeight - rect.top}px`;
+          } else {
+            panel.classList.remove("above");
+            panel.style.top = `${rect.bottom}px`;
+            panel.style.bottom = 'auto';
+          }
+          try { panel.showPopover(); } catch(e) {}
+        } else {
+          panel.classList.toggle("above", below < 200 && rect.top > 200);
+        }
+
         const cur = panel.querySelector(".selected");
         if (cur) cur.scrollIntoView({ block: "nearest" });
       };
@@ -663,7 +686,12 @@ return baseclass.extend({
         if (!isOpen) return;
         isOpen = false;
         wrap.classList.remove("open");
+        if (panel.hasAttribute("popover")) {
+          try { panel.hidePopover(); } catch(e) {}
+        }
       };
+
+      wrap.addEventListener("outline-select-close", () => close());
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -720,6 +748,63 @@ return baseclass.extend({
     new MutationObserver(() => {
       requestAnimationFrame(replaceAll);
     }).observe(target, { childList: true, subtree: true });
+  },
+
+  initCbiDropdownFix() {
+    if (!HTMLElement.prototype.hasOwnProperty("popover")) return;
+
+    const updatePosition = (dropdown) => {
+      const ul = dropdown.querySelector('ul.dropdown');
+      if (!ul) return;
+      
+      if (!ul.hasAttribute('popover')) {
+        ul.setAttribute('popover', 'manual');
+        ul.classList.add('cbi-dropdown-popover'); 
+      }
+      
+      const rect = dropdown.getBoundingClientRect();
+      ul.style.setProperty('position', 'fixed', 'important');
+      ul.style.setProperty('margin', '0', 'important');
+      ul.style.minWidth = `${rect.width}px`;
+      ul.style.left = `${rect.left}px`;
+      
+      const below = window.innerHeight - rect.bottom;
+      if (below < 200 && rect.top > 200) {
+        ul.style.top = 'auto';
+        ul.style.bottom = `${window.innerHeight - rect.top}px`;
+      } else {
+        ul.style.top = `${rect.bottom}px`;
+        ul.style.bottom = 'auto';
+      }
+      
+      if (dropdown.hasAttribute('open')) {
+        try { ul.showPopover(); } catch(e){}
+      } else {
+        try { ul.hidePopover(); } catch(e){}
+      }
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        if (m.type === 'attributes' && m.attributeName === 'open') {
+          updatePosition(m.target);
+        }
+      });
+    });
+
+    const target = document.getElementById("maincontent") || document.body;
+    observer.observe(target, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['open']
+    });
+
+    const updateAll = () => {
+      document.querySelectorAll('.cbi-dropdown[open]').forEach(updatePosition);
+    };
+
+    window.addEventListener('scroll', updateAll, true);
+    window.addEventListener('resize', updateAll);
   },
 
   initMobileMenu() {

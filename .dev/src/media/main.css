@@ -1655,11 +1655,27 @@
     }
   }
 
+  /* Popover overrides */
+  .outline-select-panel[popover],
+  .cbi-dropdown-popover[popover] {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+  }
+
   /* Shared dropdown panel styles (outline-select + cbi-dropdown) */
   .outline-select.open .outline-select-panel,
   .cbi-dropdown[open] > ul.dropdown {
     @apply border-border/80 bg-page-bg absolute left-0 z-60 block w-max min-w-full max-w-[calc(100vw-2rem)] max-h-64 overflow-x-auto overflow-y-auto rounded-lg border p-1.5 shadow-md backdrop-blur-sm;
     animation: dropdown-enter 150ms ease-out;
+  }
+
+  /* When acting as a popover, use fixed instead of absolute so it positions relative to viewport */
+  .outline-select.open .outline-select-panel[popover],
+  .cbi-dropdown[open] > ul.dropdown[popover] {
+    @apply fixed! z-[9999];
   }
 
   /* Shared dropdown option styles */
@@ -2855,9 +2871,6 @@
     .cbi-value {
       @apply relative items-start py-5;
 
-      &:has(.cbi-dropdown[open]) {
-        @apply z-50;
-      }
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 1rem;
