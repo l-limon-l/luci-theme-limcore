@@ -1497,7 +1497,7 @@
 
   @layer dropdown {
     .cbi-dropdown {
-      @apply inline-flex h-fit max-w-full min-w-fit shrink-0 items-center p-0 whitespace-nowrap shadow-sm backdrop-blur-sm transition-all duration-200;
+      @apply inline-flex h-fit max-w-full min-w-fit shrink-0 items-center p-0 whitespace-nowrap shadow-sm backdrop-blur-sm transition-colors duration-150;
       outline: 2px solid transparent;
       outline-offset: 0;
 
@@ -1647,11 +1647,11 @@
   @keyframes dropdown-enter {
     from {
       opacity: 0;
-      transform: scale(0.95) translateY(-4px);
+      transform: translateY(-4px);
     }
     to {
       opacity: 1;
-      transform: scale(1) translateY(0);
+      transform: translateY(0);
     }
   }
 
@@ -2294,10 +2294,9 @@
       & > .modal {
         @apply border-border/50 bg-page-bg flex w-4xl max-w-full max-h-[90vh] flex-col gap-4 overflow-y-auto rounded-xl border p-6 wrap-break-word whitespace-normal shadow-2xl backdrop-blur-lg backdrop-saturate-150 max-md:max-h-[95vh] max-md:gap-3 max-md:p-4;
 
-        /* Allow dropdowns to escape the modal scroll container */
+        /* Allow dropdowns to escape the modal scroll container without modal jump */
         &:has(.cbi-dropdown[open]) {
           overflow: visible;
-          max-height: none;
         }
 
         & h4 {
