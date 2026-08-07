@@ -859,7 +859,7 @@
       }
 
       & > .docs-content {
-        @apply flex min-w-0 flex-1 flex-col lg:mt-8 lg:max-w-[720px];
+        @apply flex min-w-0 flex-1 flex-col lg:mt-8 lg:max-w-none xl:max-w-none;
 
         /* Category eyebrow label (e.g. "Status", "System") — matches reference "GETTING STARTED" */
         & > h2 {
@@ -875,8 +875,8 @@
 
       & > .docs-toc {
         @apply hidden shrink-0 xl:block;
-        width: 16.5rem;
-        margin-left: 2.5rem;
+        width: 14rem;
+        margin-left: 2rem;
       }
 
       /* ── Sidebar Navigation (container) ── */
@@ -2824,7 +2824,7 @@
           @apply max-md:flex-[0_0_100%];
 
           & > div {
-            @apply max-md:w-full;
+            @apply flex flex-wrap gap-1.5 justify-end max-md:justify-start max-md:w-full;
 
             & > .cbi-button {
               @apply max-md:flex-1;

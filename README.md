@@ -18,7 +18,7 @@ OpenWrt 25.12+ and snapshots use `apk`; earlier versions use `opkg`.
 
 ```sh
 cd /tmp && uclient-fetch -O luci-theme-limcore.ipk \
-  https://github.com/l-limon-l/luci-theme-limcore/releases/latest/download/luci-theme-limcore_0.12.4-r20260807_all.ipk \
+  https://github.com/l-limon-l/luci-theme-limcore/releases/latest/download/luci-theme-limcore_0.12.5-r20260807_all.ipk \
   && opkg install luci-theme-limcore.ipk
 ```
 
@@ -26,7 +26,7 @@ cd /tmp && uclient-fetch -O luci-theme-limcore.ipk \
 
 ```sh
 cd /tmp && uclient-fetch -O luci-theme-limcore.apk \
-  https://github.com/l-limon-l/luci-theme-limcore/releases/latest/download/luci-theme-limcore-0.12.4-r20260807.apk \
+  https://github.com/l-limon-l/luci-theme-limcore/releases/latest/download/luci-theme-limcore-0.12.5-r20260807.apk \
   && apk add --allow-untrusted luci-theme-limcore.apk
 ```
 
