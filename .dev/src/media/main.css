@@ -874,9 +874,12 @@
       }
 
       & > .docs-toc {
-        @apply hidden shrink-0 xl:block;
-        width: 14rem;
-        margin-left: 2rem;
+        @apply hidden shrink-0;
+        &:has(.toc-link) {
+          @apply xl:block;
+          width: 14rem;
+          margin-left: 2rem;
+        }
       }
 
       /* ── Sidebar Navigation (container) ── */
@@ -2813,7 +2816,19 @@
         }
 
         #wifi_assoclist_table & {
-          @apply max-md:flex-[0_0_100%] max-md:px-3 max-md:py-2 before:max-md:mb-1.5;
+          @apply align-top py-3 max-md:flex-[0_0_100%] max-md:px-3 max-md:py-2 before:max-md:mb-1.5;
+        }
+
+        #wifi_assoclist_table td:nth-child(3),
+        #wifi_assoclist_table .td:nth-child(3),
+        #wifi_assoclist_table .cbi-section-table-cell:nth-child(3) {
+          @apply break-all max-w-64;
+        }
+
+        #wifi_assoclist_table td:nth-child(5),
+        #wifi_assoclist_table .td:nth-child(5),
+        #wifi_assoclist_table .cbi-section-table-cell:nth-child(5) {
+          @apply whitespace-normal min-w-44;
         }
 
         & > input[type="text"],
@@ -2831,7 +2846,7 @@
           @apply max-md:flex-[0_0_100%];
 
           & > div {
-            @apply flex flex-wrap gap-1.5 justify-end max-md:justify-start max-md:w-full;
+            @apply flex md:flex-nowrap flex-wrap gap-1.5 justify-end max-md:justify-start max-md:w-full;
 
             & > .cbi-button {
               @apply max-md:flex-1;
