@@ -2060,7 +2060,7 @@
       @apply mb-0 overflow-visible rounded-none border-b-0 p-0 pb-8;
 
       & > div {
-        @apply overflow-x-auto;
+        @apply w-full min-w-full overflow-x-auto;
       }
 
       & + .cbi-section {
@@ -2639,13 +2639,13 @@
   @layer table {
     /* Scroll wrapper for tables that may overflow horizontally */
     .cbi-section-table-wrapper {
-      @apply overflow-x-auto;
+      @apply w-full min-w-full overflow-x-auto;
     }
 
     .table,
     table,
     .cbi-section-table {
-      @apply table mb-4 w-full border-separate border-spacing-0 overflow-visible border-0 bg-transparent max-md:mx-0 max-md:block max-md:w-full max-md:overflow-visible max-md:shadow-none;
+      @apply table mb-4 w-full min-w-full border-separate border-spacing-0 overflow-visible border-0 bg-transparent max-md:mx-0 max-md:block max-md:w-full max-md:overflow-visible max-md:shadow-none;
 
       &[width="100%"] {
         @apply w-full;

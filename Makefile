@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=LimCore Theme (A modern browser theme built with Vite and Tailwind CSS)
 LUCI_DEPENDS:=+luci-base
 
-PKG_VERSION:=0.12.8
+PKG_VERSION:=0.12.9
 PKG_RELEASE:=20260807
 PKG_LICENSE:=Apache-2.0
 
