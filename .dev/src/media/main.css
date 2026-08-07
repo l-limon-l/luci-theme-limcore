@@ -551,7 +551,7 @@
   }
 
   pre {
-    @apply text-secondary-foreground border-border/40 bg-secondary/40 block rounded-lg border px-4 py-3 font-mono text-sm leading-relaxed wrap-break-word whitespace-pre-wrap;
+    @apply text-secondary-foreground border-border/40 bg-secondary/40 block rounded-lg border px-4 py-3 font-mono text-sm leading-relaxed break-words whitespace-pre-wrap;
   }
 
   code {
@@ -2303,7 +2303,7 @@
       }
 
       & > .modal {
-        @apply border-border/50 bg-page-bg flex w-4xl max-w-full max-h-[90vh] flex-col gap-4 overflow-y-auto rounded-xl border p-6 wrap-break-word whitespace-normal shadow-2xl backdrop-blur-lg backdrop-saturate-150 max-md:max-h-[95vh] max-md:gap-3 max-md:p-4;
+        @apply border-border/50 bg-page-bg flex w-4xl max-w-full max-h-[90vh] flex-col gap-4 overflow-y-auto rounded-xl border p-6 break-words whitespace-normal shadow-2xl backdrop-blur-lg backdrop-saturate-150 max-md:max-h-[95vh] max-md:gap-3 max-md:p-4;
 
         & h4 {
           @apply mb-0 text-center;
@@ -2644,7 +2644,7 @@
 
     .table,
     table {
-      @apply mb-4 w-full border-separate border-spacing-0 overflow-visible border-0 bg-transparent max-md:mx-0 max-md:block max-md:w-full max-md:overflow-visible max-md:shadow-none;
+      @apply table mb-4 w-full border-separate border-spacing-0 overflow-visible border-0 bg-transparent max-md:mx-0 max-md:block max-md:w-full max-md:overflow-visible max-md:shadow-none;
 
       &[width="100%"] {
         @apply w-full;
@@ -2679,7 +2679,7 @@
 
       & tr,
       & .tr {
-        @apply max-md:border-border bg-transparent transition-[background-color] duration-200 ease-out max-md:flex max-md:flex-wrap max-md:border-b max-md:px-0 max-md:py-2;
+        @apply table-row max-md:border-border bg-transparent transition-[background-color] duration-200 ease-out max-md:flex max-md:flex-wrap max-md:border-b max-md:px-0 max-md:py-2;
         @apply has-[.cbi-progressbar]:max-md:flex has-[.cbi-progressbar]:max-md:items-center has-[.cbi-progressbar]:max-md:justify-center;
 
         &:last-child {
@@ -2794,7 +2794,7 @@
 
       & td,
       & .td {
-        @apply text-muted-foreground border-border/30 table-cell border-b px-3 py-2 align-middle text-base wrap-break-word whitespace-normal max-md:flex-[1_1_50%] max-md:border-0 max-md:px-1 max-md:py-1 max-md:text-sm;
+        @apply text-muted-foreground border-border/30 table-cell border-b px-3 py-2 align-middle text-base break-words whitespace-normal max-md:flex-[1_1_50%] max-md:border-0 max-md:px-1 max-md:py-1 max-md:text-sm;
         @apply before:hidden before:content-[attr(data-title)] before:max-md:mb-1 before:max-md:block before:max-md:text-xs before:max-md:font-semibold before:max-md:tracking-wider;
 
         #cbi-samba4 & {
@@ -2895,7 +2895,7 @@
       }
 
       & .cbi-value-description {
-        @apply text-muted-foreground mt-0.5 block max-w-64 text-xs leading-snug wrap-break-word;
+        @apply text-muted-foreground mt-0.5 block max-w-64 text-xs leading-snug break-words;
       }
 
       & > .cbi-value-field {
@@ -2919,7 +2919,7 @@
 
         /* Fallback for descriptions not yet moved by JS */
         & .cbi-value-description {
-          @apply text-muted-foreground mt-1 text-xs leading-snug wrap-break-word;
+          @apply text-muted-foreground mt-1 text-xs leading-snug break-words;
         }
       }
 
