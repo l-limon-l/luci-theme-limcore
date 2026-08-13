@@ -651,10 +651,17 @@ return baseclass.extend({
   initCustomSelects() {
     const replace = (sel) => {
       if (sel._outlineReplaced || sel.closest(".outline-select")) return;
-      sel._outlineReplaced = true;
 
+      /* Marked only once the replacement is actually built. Setting it before
+         the emptiness check below burned every select that enters the DOM with
+         no options yet and is filled afterwards — LuCI's wifi frequency widget
+         inserts .mode/.band/.channel/.htmode empty and populates them on the
+         next turn — so the re-run triggered by that very population skipped
+         them for good and they stayed unthemed. */
       const opts = Array.from(sel.options);
       if (!opts.length) return;
+
+      sel._outlineReplaced = true;
 
       const wrap = document.createElement("div");
       wrap.className = "outline-select";
@@ -707,6 +714,16 @@ return baseclass.extend({
 
       sel.style.display = "none";
       sel.insertAdjacentElement("afterend", wrap);
+
+      /* A <label> forwards a click anywhere inside it to the control it labels,
+         so on LuCI's wifi frequency widget — the one place that puts its
+         <select>s inside <label>s — pressing the trigger produced a second,
+         synthetic click on the hidden select. That one is not inside `wrap`, so
+         the outside-click handler below read it as a click elsewhere on the page
+         and closed the panel in the same tick the trigger had opened it. The
+         dropdown looked like it simply would not open. The select is hidden and
+         can never be clicked in earnest, so its clicks are all of this kind. */
+      sel.addEventListener("click", (e) => e.stopPropagation());
 
       let isOpen = false;
 
