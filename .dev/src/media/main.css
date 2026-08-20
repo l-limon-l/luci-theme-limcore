@@ -1464,8 +1464,14 @@
       }
     }
 
+    /* w-full, because the border lives here while the width lives on the
+       wrapper: forms give .outline-select a 288px floor so every control in a
+       column starts at the same left edge, but the trigger is a flex item and
+       stayed at content width. The box drew 136px wide while the chevron —
+       absolutely positioned against the 288px wrapper — hung 150px off to its
+       right, detached from the control it belongs to. */
     .outline-select-trigger {
-      @apply text-foreground border-border/60 bg-page-bg flex h-9 items-center gap-2 rounded-lg border px-3 pr-8 text-sm font-normal shadow-sm transition-colors duration-200 hover:bg-muted/40;
+      @apply text-foreground border-border/60 bg-page-bg flex h-9 w-full min-w-0 items-center gap-2 rounded-lg border px-3 pr-8 text-sm font-normal shadow-sm transition-colors duration-200 hover:bg-muted/40;
       outline: 2px solid transparent;
       outline-offset: 0;
     }
@@ -2847,6 +2853,49 @@
         & td.cbi-section-actions,
         & .td.cbi-section-actions {
           @apply w-px whitespace-nowrap;
+        }
+      }
+
+      /* overflow-wrap:anywhere above drops every cell's min-content width to a
+         single character, so auto table layout was free to hand the address
+         column less than "192.168.1.201" needs: the last digit wrapped onto its
+         own line, and MAC addresses split mid-octet ("A9:B2:2 / 8"). An address,
+         a MAC and a duration are atomic — they carry no meaning once broken, so
+         nowrap raises their min-content back to the whole value.
+
+         No width here: pinning these columns to w-px as well starved the one
+         column that *can* wrap. Seven columns need ~692px of the 752px content
+         column, which left the hostname 66px and blew rows up to 281px tall.
+         The floor below reserves the hostname a share instead, and the table
+         scrolls inside its own box (~117px) rather than shredding a name down
+         a 66px gutter — measured: worst row 161px → 113px, median stays 65px.
+         Column indexes, not [data-title], because the titles are translated. */
+      &[id="status_leases"] {
+        & td:nth-child(2),
+        & .td:nth-child(2),
+        & td:nth-child(3),
+        & .td:nth-child(3),
+        & td:nth-child(6),
+        & .td:nth-child(6) {
+          @apply md:whitespace-nowrap;
+        }
+
+        & th:first-child,
+        & .th:first-child,
+        & td:first-child,
+        & .td:first-child {
+          @apply md:min-w-44;
+        }
+      }
+
+      /* DHCPv6: interface and lease time are atomic; the address and DUID are
+         long enough that they still have to wrap. */
+      &[id="status_leases6"] {
+        & td:nth-child(1),
+        & .td:nth-child(1),
+        & td:nth-child(6),
+        & .td:nth-child(6) {
+          @apply md:whitespace-nowrap;
         }
       }
 
