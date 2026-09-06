@@ -1799,7 +1799,7 @@
         );
 
         position: fixed;
-        top: calc(5rem + var(--toast-index, 0) * 4.5rem);
+        top: calc(5rem + var(--toast-offset, 0px));
         right: 1.5rem;
         left: auto;
         z-index: calc(50 - var(--toast-index, 0));
@@ -1811,10 +1811,30 @@
         box-shadow:
           0 8px 32px rgba(0, 0, 0, 0.35),
           0 0 0 1px oklch(1 0 0 / 0.06);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+
+        /* Opaque surface — floating toasts must never show the page through
+           them (backdrop-filter is unreliable on mobile browsers) */
+        background: color-mix(in srgb, var(--foreground) 5%, var(--card));
         animation: sileo-toast-in 400ms var(--sileo-spring) both;
         transition: top 300ms ease;
+
+        &.success {
+          background: color-mix(in srgb, rgb(22, 163, 74) 15%, var(--card));
+        }
+
+        &.info {
+          background: color-mix(in srgb, rgb(37, 99, 235) 15%, var(--card));
+        }
+
+        &.warning,
+        &.notice {
+          background: color-mix(in srgb, rgb(202, 138, 4) 15%, var(--card));
+        }
+
+        &.error,
+        &.danger {
+          background: color-mix(in srgb, rgb(220, 38, 38) 15%, var(--card));
+        }
 
         /* Center the ::before icon within padding-left area */
         &::before {
@@ -1876,14 +1896,14 @@
         }
 
         @media (max-width: 1023px) {
-          top: calc(8rem + var(--toast-index, 0) * 4.5rem);
+          top: calc(8rem + var(--toast-offset, 0px));
         }
 
         @media (max-width: 767px) {
           right: 0.75rem;
           left: 0.75rem;
           max-width: none;
-          top: calc(8rem + var(--toast-index, 0) * 2.5rem);
+          top: calc(8rem + var(--toast-offset, 0px));
         }
       }
 

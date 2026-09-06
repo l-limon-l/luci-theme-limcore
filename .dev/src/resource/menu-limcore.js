@@ -147,14 +147,32 @@ return baseclass.extend({
     const container = document.getElementById("maincontent");
     if (!container) return;
 
+    const TOAST_GAP = 12;
+
+    /* Stack toasts by their real height so multi-line ones never overlap */
     const updateIndices = () => {
       const toasts = container.querySelectorAll(
         ":scope > .alert-message:not(.toast-exit)",
       );
+      let offset = 0;
       toasts.forEach((t, i) => {
         t.style.setProperty("--toast-index", i);
+        t.style.setProperty("--toast-offset", `${offset}px`);
+        offset += (t.offsetHeight || 0) + TOAST_GAP;
       });
     };
+
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateIndices, 100);
+    });
+
+    /* Toast content can change after insertion (status toast) — restack */
+    const sizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => updateIndices())
+        : null;
 
     const dismissToast = (toast) => {
       if (toast._toastDismissing) return;
@@ -184,8 +202,9 @@ return baseclass.extend({
       if (toast._toastInit) return;
       toast._toastInit = true;
 
-      /* Recalculate stacking indices (newest = index 0 = top) */
+      /* Recalculate stacking offsets (newest = index 0 = top) */
       updateIndices();
+      requestAnimationFrame(updateIndices);
 
       /* Auto-dismiss after delay */
       toast._toastTimer = setTimeout(() => dismissToast(toast), DISMISS_DELAY);
@@ -203,6 +222,7 @@ return baseclass.extend({
 
     /* Watch for new toasts added to #maincontent */
     new MutationObserver((mutations) => {
+      let changed = false;
       for (const m of mutations) {
         for (const node of m.addedNodes) {
           if (
@@ -210,16 +230,39 @@ return baseclass.extend({
             node.classList?.contains("alert-message") &&
             node.parentNode === container
           ) {
+            changed = true;
             setupToast(node);
           }
         }
+        for (const node of m.removedNodes) {
+          if (node.nodeType === 1 && node.classList?.contains("alert-message"))
+            changed = true;
+        }
+      }
+      /* Also covers toasts created elsewhere (e.g. the UCI status toast) */
+      if (changed) {
+        container
+          .querySelectorAll(":scope > .alert-message")
+          .forEach((t) => {
+            if (t._toastObserved || !sizeObserver) return;
+            t._toastObserved = true;
+            sizeObserver.observe(t);
+          });
+        updateIndices();
+        requestAnimationFrame(updateIndices);
       }
     }).observe(container, { childList: true });
 
     /* Setup any existing toasts */
     container
       .querySelectorAll(":scope > .alert-message")
-      .forEach(setupToast);
+      .forEach((t) => {
+        if (sizeObserver && !t._toastObserved) {
+          t._toastObserved = true;
+          sizeObserver.observe(t);
+        }
+        setupToast(t);
+      });
   },
 
   initVercelTabs() {
